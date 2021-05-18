@@ -1,0 +1,11 @@
+spring:
+  # 服务名
+  application:
+    name: louismall-gateway
+
+  # nacos服务地址
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: 2c3d7089-b878-4472-8f55-d0029b388c66

@@ -1,0 +1,29 @@
+# 服务端口
+server:
+  port: 9000
+
+spring:
+  # 服务名
+  application:
+    name: louismall-order
+
+  # mysql数据库连接
+  datasource:
+    url: jdbc:mysql://101.200.192.10:3306/louismall_oms
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # nacos服务地址
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+# 配置mapper xml文件的路径
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  # mybatis自增
+  global-config:
+    db-config:
+      id-type: auto

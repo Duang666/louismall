@@ -15,5 +15,9 @@
         <module>louismall-order</module>
         <module>louismall-product</module>
         <module>louismall-ware</module>
+        <module>renren-fast</module>
+        <module>renren-generator</module>
+        <module>louismall-common</module>
+        <module>louismall-gateway</module>
     </modules>
 </project>

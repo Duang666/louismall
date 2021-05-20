@@ -1,9 +1,9 @@
 spring:
-  # ·şÎñÃû
+  # æœåŠ¡å
   application:
     name: louismall-coupon
 
-  # nacos·şÎñµØÖ·
+  # nacosæœåŠ¡åœ°å€
   cloud:
     nacos:
       config:

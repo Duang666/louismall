@@ -1,13 +1,13 @@
-# ����˿�
+# 服务名称
 server:
   port: 88
 
 spring:
-  # ������
+  # 服务名
   application:
     name: louismall-gateway
 
-  # nacos�����ַ
+  # mysql数据库连接
   cloud:
     nacos:
       discovery:
@@ -15,9 +15,25 @@ spring:
 
     gateway:
       routes:
-        - id: test_route
-          uri: https://www.baidu.com
+        # 配置 louismall-product 服务
+        - id: product_route
+          uri: lb://louismall-product
           predicates:
-            - Query=url,baidu
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+
+        # 配置 renren-fast 服务
+        - id: admin_route
+          # 设置路由的uri   lb://nacos注册服务名称
+          uri: lb://renren-fast
+          # 设置路由断言,代理servicerId为auth-service的/auth/路径
+          predicates:
+            - Path=/api/**
+          # 路径重写
+          filters:
+            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+
 
 

@@ -1,30 +1,32 @@
-# ·şÎñ¶Ë¿Ú
+# æœåŠ¡ç«¯å£
 server:
   port: 11000
 
 spring:
-  # ·şÎñÃû
-  application:
-    name: louismall-product
-
-  # mysqlÊı¾İ¿âÁ¬½Ó
+  # mysqlæ•°æ®åº“è¿æ¥
   datasource:
     url: jdbc:mysql://101.200.192.10:3306/louismall_pms
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  # nacos·şÎñµØÖ·
+  # é…ç½®nacosæ³¨å†Œä¸­å¿ƒ
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
 
-# ÅäÖÃmapper xmlÎÄ¼şµÄÂ·¾¶
+# mybatis-plusç›¸å…³é…ç½®
 mybatis-plus:
+  # é…ç½®mapper xmlæ–‡ä»¶çš„è·¯å¾„
   mapper-locations: classpath:/mapper/**/*.xml
-  # mybatis×ÔÔö
+  # mybatisè‡ªå¢
   global-config:
     db-config:
       id-type: auto
+      logic-delete-value: 1 # é€»è¾‘å·²åˆ é™¤å€¼(é»˜è®¤ä¸º 1)
+      logic-not-delete-value: 0 # é€»è¾‘æœªåˆ é™¤å€¼(é»˜è®¤ä¸º 0)
 
+logging:
+  level:
+    com.louisblogs.louismall: debug

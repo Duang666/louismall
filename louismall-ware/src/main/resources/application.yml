@@ -1,29 +1,29 @@
-# ·şÎñ¶Ë¿Ú
+# æœåŠ¡ç«¯å£
 server:
   port: 12000
 
 spring:
-  # ·şÎñÃû
+  # æœåŠ¡å
   application:
     name: louismall-ware
 
-  # mysqlÊı¾İ¿âÁ¬½Ó
+  # mysqlæ•°æ®åº“è¿æ¥
   datasource:
     url: jdbc:mysql://101.200.192.10:3306/louismall_wms
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  # nacos·şÎñµØÖ·
+  # nacosæœåŠ¡åœ°å€
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
 
-# ÅäÖÃmapper xmlÎÄ¼şµÄÂ·¾¶
+# é…ç½®mapper xmlæ–‡ä»¶çš„è·¯å¾„
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
-  # mybatis×ÔÔö
+  # mybatisè‡ªå¢
   global-config:
     db-config:
       id-type: auto

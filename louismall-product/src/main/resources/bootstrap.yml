@@ -8,3 +8,4 @@ spring:
     nacos:
       config:
         server-addr: 127.0.0.1:8848
+        namespace: 74b289e6-b16e-4ad8-8327-ddd293078890

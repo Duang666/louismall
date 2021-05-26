@@ -1,0 +1,15 @@
+spring:
+  # 服务名
+  application:
+    name: louismall-third-party
+
+  # nacos服务地址
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: 8d54c123-9ef6-4714-84b6-ed4e56d82f7d
+        ext-config[0]:
+          data-id: oss.yml
+          group: DEFAULT_GROUP
+          refresh: true

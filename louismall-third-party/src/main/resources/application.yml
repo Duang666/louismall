@@ -1,0 +1,39 @@
+# 服务端口
+server:
+  port: 30000
+
+spring:
+  # mysql数据库连接
+  datasource:
+    url: jdbc:mysql://101.200.192.10:3306/louismall_pms
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # 配置nacos注册中心
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+    alicloud:
+      access-key: LTAI5tBudmeWSA8mCoLyrBPz
+      secret-key: mEiZGQa7AVpc3ZNjtUH154muZquXVY
+      oss:
+        endpoint: oss-cn-beijing.aliyuncs.com
+        bucket: louismall
+
+# mybatis-plus相关配置
+mybatis-plus:
+  # 配置mapper xml文件的路径
+  mapper-locations: classpath:/mapper/**/*.xml
+  # mybatis自增
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+
+logging:
+  level:
+    com.louisblogs.louismall: debug

@@ -23,6 +23,13 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
 
+        # 配置 third_party_route 服务
+        - id: third_party_route
+          uri: lb://louismall-third-party
+          predicates:
+            - Path=/api/thirdparty/**
+          filters:
+            - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
 
         # 配置 renren-fast 服务
         - id: admin_route

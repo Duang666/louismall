@@ -17,8 +17,8 @@ spring:
         server-addr: 127.0.0.1:8848
 
     alicloud:
-      access-key: LTAI5tBudmeWSA8mCoLyrBPz
-      secret-key: mEiZGQa7AVpc3ZNjtUH154muZquXVY
+      access-key: access-key
+      secret-key: secret-key
       oss:
         endpoint: oss-cn-beijing.aliyuncs.com
         bucket: louismall

@@ -17,9 +17,12 @@ spring:
       routes:
         # 配置 louismall-product 服务
         - id: product_route
+          # 设置路由的uri   lb://nacos注册服务名称
           uri: lb://louismall-product
+          # 设置路由断言,代理servicerId为auth-service的/auth/路径
           predicates:
             - Path=/api/product/**
+          # 路径重写
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
 
@@ -31,14 +34,19 @@ spring:
           filters:
             - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
 
+        # 配置 member_route 服务
+        - id: member_route
+          uri: lb://louismall-member
+          predicates:
+            - Path=/api/member/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
         # 配置 renren-fast 服务
         - id: admin_route
-          # 设置路由的uri   lb://nacos注册服务名称
           uri: lb://renren-fast
-          # 设置路由断言,代理servicerId为auth-service的/auth/路径
           predicates:
             - Path=/api/**
-          # 路径重写
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
 

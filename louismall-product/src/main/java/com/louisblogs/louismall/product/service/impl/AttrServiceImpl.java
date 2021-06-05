@@ -131,6 +131,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 		AttrEntity attrEntity = this.getById(attrId);
 		BeanUtils.copyProperties(attrEntity, respVo);
 
+
 		if (attrEntity.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()) {
 			//1、设置分组信息
 			AttrAttrgroupRelationEntity attrgroupRelation = relationDao.selectOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attrId));
@@ -138,10 +139,11 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 				respVo.setAttrGroupId(attrgroupRelation.getAttrGroupId());
 				AttrGroupEntity attrGroupEntity = attrGroupDao.selectById(attrgroupRelation.getAttrGroupId());
 				if (attrGroupEntity != null) {
-					respVo.setAttrName(attrGroupEntity.getAttrGroupName());
+					respVo.setGroupName(attrGroupEntity.getAttrGroupName());
 				}
 			}
 		}
+
 
 		//2、设置分类信息
 		Long catelogId = attrEntity.getCatelogId();
@@ -153,13 +155,13 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 			respVo.setCatelogName(categoryEntity.getName());
 		}
 
+
 		return respVo;
 	}
 
-	//修改分组
 	@Transactional
 	@Override
-	public void updateAttr(AttrRespVo attr) {
+	public void updateAttr(AttrVo attr) {
 		AttrEntity attrEntity = new AttrEntity();
 		BeanUtils.copyProperties(attr, attrEntity);
 		this.updateById(attrEntity);
@@ -172,9 +174,10 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 			relationEntity.setAttrId(attr.getAttrId());
 
 			Integer count = relationDao.selectCount(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attr.getAttrId()));
-
 			if (count > 0) {
+
 				relationDao.update(relationEntity, new UpdateWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attr.getAttrId()));
+
 			} else {
 				relationDao.insert(relationEntity);
 			}
@@ -247,7 +250,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 		//2.3、从当前分类的所有属性中移除这些属性
 		QueryWrapper<AttrEntity> wrapper = new QueryWrapper<AttrEntity>().eq("catelog_id", catelogId).eq("attr_type", ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode());
 		if (attrIds != null && attrIds.size() > 0) {
-				wrapper.notIn("attr_id", attrIds);
+			wrapper.notIn("attr_id", attrIds);
 		}
 		String key = (String) params.get("key");
 		if (!StringUtils.isEmpty(key)) {

@@ -29,15 +29,14 @@ public class AttrController {
 	@Autowired
 	private AttrService attrService;
 
-	///product/attr/info/{attrId}
-
 	///product/attr/sale/list/0?
 	///product/attr/base/list/{catelogId}
 	@GetMapping("/{attrType}/list/{catelogId}")
 	public R baseAttrList(@RequestParam Map<String, Object> params,
 	                      @PathVariable("catelogId") Long catelogId,
 	                      @PathVariable("attrType") String type) {
-		PageUtils page = attrService.queryBaseAttrPage(params,catelogId,type);
+
+		PageUtils page = attrService.queryBaseAttrPage(params, catelogId, type);
 		return R.ok().put("page", page);
 	}
 
@@ -81,7 +80,7 @@ public class AttrController {
 	 */
 	@RequestMapping("/update")
 	//@RequiresPermissions("product:attr:update")
-	public R update(@RequestBody AttrRespVo attr) {
+	public R update(@RequestBody AttrVo attr) {
 		attrService.updateAttr(attr);
 
 		return R.ok();

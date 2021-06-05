@@ -27,7 +27,7 @@ public interface AttrService extends IService<AttrEntity> {
 
 	AttrRespVo getAttrInfo(Long attrId);
 
-	void updateAttr(AttrRespVo attr);
+	void updateAttr(AttrVo attr);
 
 	//获取指定分组关联的所有属性
 	List<AttrEntity> getRelationAttr(Long attrgroupId);

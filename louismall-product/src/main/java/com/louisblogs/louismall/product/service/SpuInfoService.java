@@ -2,7 +2,9 @@ package com.louisblogs.louismall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.louisblogs.common.utils.PageUtils;
+import com.louisblogs.louismall.product.entity.SpuInfoDescEntity;
 import com.louisblogs.louismall.product.entity.SpuInfoEntity;
+import com.louisblogs.louismall.product.vo.SpuSaveVo;
 
 import java.util.Map;
 
@@ -16,5 +18,11 @@ import java.util.Map;
 public interface SpuInfoService extends IService<SpuInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+	void saveSpuInfo(SpuSaveVo vo);
+
+	//1、保存spu基本信息
+	void saveBaseSpuInfo(SpuInfoEntity infoEntity);
+
 }
 

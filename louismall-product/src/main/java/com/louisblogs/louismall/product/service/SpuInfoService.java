@@ -24,5 +24,7 @@ public interface SpuInfoService extends IService<SpuInfoEntity> {
 	//1、保存spu基本信息
 	void saveBaseSpuInfo(SpuInfoEntity infoEntity);
 
+	//spu检索
+	PageUtils queryPageByCondition(Map<String, Object> params);
 }
 

@@ -16,6 +16,10 @@ spring:
       discovery:
         server-addr: 127.0.0.1:8848
 
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
 # mybatis-plus相关配置
 mybatis-plus:
   # 配置mapper xml文件的路径

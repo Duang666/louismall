@@ -3,7 +3,10 @@ package com.louisblogs.louismall.ware.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.louisblogs.common.utils.PageUtils;
 import com.louisblogs.louismall.ware.entity.PurchaseEntity;
+import com.louisblogs.louismall.ware.vo.MergeVo;
+import com.louisblogs.louismall.ware.vo.PurshaseDoneVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +19,17 @@ import java.util.Map;
 public interface PurchaseService extends IService<PurchaseEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+	//查询未领取的采购单
+	PageUtils queryPageUnreceive(Map<String, Object> params);
+
+	//合并采购需求
+	void mergePurchase(MergeVo mergeVo);
+
+	//领取采购单
+	void received(List<Long> ids);
+
+	//完成采购
+	void done(PurshaseDoneVo doneVo);
 }
 

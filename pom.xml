@@ -14,6 +14,7 @@
         <module>louismall-member</module>
         <module>louismall-order</module>
         <module>louismall-product</module>
+        <module>louismall-search</module>
         <module>louismall-ware</module>
         <module>renren-fast</module>
         <module>renren-generator</module>

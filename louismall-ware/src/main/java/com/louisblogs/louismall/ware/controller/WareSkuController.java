@@ -32,11 +32,11 @@ public class WareSkuController {
 	/**
 	 * 查询sku是否有库存
 	 */
-	@PostMapping("/hasstock")
+	@PostMapping("/hasStock")
 	public R getSkuHasStock(@RequestBody List<Long> skuIds) {
 
 		//sku_id, stock
-		List<SkuHasStockVo> vos = wareSkuService.getSkusHasStock(skuIds);
+		List<SkuHasStockVo> vos = wareSkuService.getSkuHasStock(skuIds);
 
 		return R.ok().setData(vos);
 	}

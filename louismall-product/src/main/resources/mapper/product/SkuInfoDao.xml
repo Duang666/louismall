@@ -17,6 +17,8 @@
         <result property="price" column="price"/>
         <result property="saleCount" column="sale_count"/>
     </resultMap>
-
+    <update id="updateSpuStatus">
+        UPDATE `pms_spu_info` SET publish_status=#{code} , update_time=NOW() WHERE id=#{spuId}
+    </update>
 
 </mapper>

@@ -10,16 +10,16 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>louismall-coupon</module>
-        <module>louismall-member</module>
-        <module>louismall-order</module>
-        <module>louismall-product</module>
-        <module>louismall-search</module>
-        <module>louismall-ware</module>
-        <module>renren-fast</module>
-        <module>renren-generator</module>
         <module>louismall-common</module>
-        <module>louismall-gateway</module>
-        <module>louismall-third-party</module>
+        <module>louismall-coupon</module>       <!-- 7000 -->
+        <module>louismall-member</module>       <!-- 8000 -->
+        <module>louismall-order</module>        <!-- 9000 -->
+        <module>louismall-product</module>      <!-- 11000 -->
+        <module>louismall-ware</module>         <!-- 12000 -->
+        <module>louismall-search</module>       <!-- 13000 -->
+        <module>renren-fast</module>            <!-- 8080 -->
+        <module>renren-generator</module>       <!-- 80 -->
+        <module>louismall-gateway</module>      <!-- 88 -->
+        <module>louismall-third-party</module>  <!-- 30000 -->
     </modules>
 </project>

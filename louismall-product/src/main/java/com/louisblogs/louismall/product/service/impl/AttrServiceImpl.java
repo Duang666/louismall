@@ -2,14 +2,12 @@ package com.louisblogs.louismall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.louisblogs.common.constant.ProductConstant;
-import com.louisblogs.louismall.product.controller.AttrAttrgroupRelationController;
 import com.louisblogs.louismall.product.dao.AttrAttrgroupRelationDao;
 import com.louisblogs.louismall.product.dao.AttrGroupDao;
 import com.louisblogs.louismall.product.dao.CategoryDao;
 import com.louisblogs.louismall.product.entity.AttrAttrgroupRelationEntity;
 import com.louisblogs.louismall.product.entity.AttrGroupEntity;
 import com.louisblogs.louismall.product.entity.CategoryEntity;
-import com.louisblogs.louismall.product.service.AttrGroupService;
 import com.louisblogs.louismall.product.service.CategoryService;
 import com.louisblogs.louismall.product.vo.AttrGroupRelationVo;
 import com.louisblogs.louismall.product.vo.AttrRespVo;

@@ -20,6 +20,10 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
 
+  # thymeleaf
+  thymeleaf:
+    cache: false
+
 # mybatis-plus相关配置
 mybatis-plus:
   # 配置mapper xml文件的路径

@@ -3,6 +3,7 @@ package com.louisblogs.louismall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.louisblogs.common.utils.PageUtils;
 import com.louisblogs.louismall.product.entity.CategoryEntity;
+import com.louisblogs.louismall.product.vo.front.Catelog2Vo;
 
 import java.util.List;
 import java.util.Map;
@@ -29,5 +30,10 @@ public interface CategoryService extends IService<CategoryEntity> {
 
 	//三级分类级联更新修改
 	void updateCascade(CategoryEntity category);
+
+	//渲染首页数据
+	List<CategoryEntity> getLevel1Categorys();
+
+	Map<String, List<Catelog2Vo>> getCatalogJson();
 }
 

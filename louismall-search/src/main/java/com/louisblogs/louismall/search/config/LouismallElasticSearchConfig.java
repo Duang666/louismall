@@ -24,12 +24,12 @@ public class LouismallElasticSearchConfig {
 
 		RestClientBuilder builder = null;
 		//final String hostname, final int port, final String scheme
-		builder = RestClient.builder(new HttpHost("101.200.192.10", 9200, "http"));
+		builder = RestClient.builder(new HttpHost("192.168.56.10", 9200, "http"));
 		RestHighLevelClient client = new RestHighLevelClient(builder);
 
 //		RestHighLevelClient client = new RestHighLevelClient(
 //				RestClient.builder(
-//						new HttpHost("101.200.192.10", 9200, "http")));
+//						new HttpHost("192.168.56.10", 9200, "http")));
 		return client;
 	}
 

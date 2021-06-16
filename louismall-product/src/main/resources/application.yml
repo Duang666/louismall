@@ -5,7 +5,7 @@ server:
 spring:
   # mysql数据库连接
   datasource:
-    url: jdbc:mysql://101.200.192.10:3306/louismall_pms
+    url: jdbc:mysql://192.168.56.10:3306/louismall_pms
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -23,6 +23,21 @@ spring:
   # thymeleaf
   thymeleaf:
     cache: false
+
+  # redis
+  redis:
+    host: 192.168.56.10
+    port: 6379
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      # 如果指定了前缀就用我们指定的前缀，如果没有就默认使用缓存的名字作为前缀
+#      key-prefix: CACHE_
+      use-key-prefix: true
+      # 是否缓存空值null，防止缓存穿透
+      cache-null-values: true
 
 # mybatis-plus相关配置
 mybatis-plus:

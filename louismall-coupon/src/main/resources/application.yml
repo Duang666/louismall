@@ -9,7 +9,7 @@ spring:
 
   # mysql数据库连接
   datasource:
-    url: jdbc:mysql://101.200.192.10:3306/louismall_sms
+    url: jdbc:mysql://192.168.56.10:3306/louismall_sms
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver

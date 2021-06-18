@@ -62,7 +62,13 @@ spring:
         - id: louismall_host_route
           uri: lb://louismall-product
           predicates:
-            - Host=**.louismall.com,louismall.com
+            - Host=louismall.com
+
+        # 配置 louismall-search-route 服务
+        - id: louismall_search_route
+          uri: lb://louismall-search
+          predicates:
+            - Host=search.louismall.com
 
 
 

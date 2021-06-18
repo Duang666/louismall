@@ -135,6 +135,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 	 * 1、同时进行多种缓存操作 @Caching
 	 * 2、指定删除某个分区下的所有数据 @CacheEvict(value = "category", allEntries = true)
 	 * 3、储存同一类型的数据，都可以指定成同一个分区。分区名默认就是缓存的前缀
+	 *
 	 * @param category
 	 * @CacheEvict:失效模式
 	 */
@@ -164,7 +165,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 	//1）指定生成的缓存使用的key；  key属性指定，接受一个spgl
 	//2）指定缓存的数据的存话时间    配置文件中修改ttl
 	//3）将数据保存为json格式
-	@Cacheable(value = {"category"}, key = "#root.methodName", sync = true)
+	@Cacheable(value = {"category"}, key = "#root.method.name", sync = true)
 	//代表当前方法的结果需要缓存，如果缓存中有，方法不用调用。如果缓存中没有，会调用方法，最后将方法的结果调用缓存
 	@Override
 	public List<CategoryEntity> getLevel1Categorys() {
@@ -174,7 +175,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 		return categoryEntities;
 	}
 
-	@Cacheable(value = {"category"}, key = "#root.methodName")
+	@Cacheable(value = {"category"}, key = "#root.methodName", sync = true)
 	@Override
 	public Map<String, List<Catelog2Vo>> getCatalogJson() {
 		System.out.println("查询了数据库。。。。。");
@@ -206,7 +207,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 					return catelog2Vo;
 				}).collect(Collectors.toList());
 			}
-
 			return catelog2Vos;
 		}));
 		return parent_cid;

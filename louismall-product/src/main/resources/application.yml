@@ -5,7 +5,7 @@ server:
 spring:
   # mysql数据库连接
   datasource:
-    url: jdbc:mysql://192.168.56.10:3306/louismall_pms
+    url: jdbc:mysql://192.168.56.10:3306/louismall_pms?useUnicode=true&characterEncoding=utf-8
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver

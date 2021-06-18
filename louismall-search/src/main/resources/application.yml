@@ -1,4 +1,4 @@
-# \u670D\u52A1\u7AEF\u53E3
+# 服务端口
 server:
   port: 13000
 
@@ -6,8 +6,12 @@ spring:
   application:
     name: louismall-search
 
-  # \u914D\u7F6Enacos\u6CE8\u518C\u4E2D\u5FC3
+  # 配置nacos注册中心
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+
+  # thymeleaf
+  thymeleaf:
+    cache: false

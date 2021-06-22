@@ -19,20 +19,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class LouismallElasticSearchConfig {
 
-	@Bean
-	public RestHighLevelClient esRestClient() {
-
-		RestClientBuilder builder = null;
-		//final String hostname, final int port, final String scheme
-		builder = RestClient.builder(new HttpHost("192.168.56.10", 9200, "http"));
-		RestHighLevelClient client = new RestHighLevelClient(builder);
-
-//		RestHighLevelClient client = new RestHighLevelClient(
-//				RestClient.builder(
-//						new HttpHost("192.168.56.10", 9200, "http")));
-		return client;
-	}
-
 	public static final RequestOptions COMMON_OPTIONS;
 	static {
 		RequestOptions.Builder builder = RequestOptions.DEFAULT.toBuilder();
@@ -41,6 +27,17 @@ public class LouismallElasticSearchConfig {
 //				new HttpAsyncResponseConsumerFactory
 //						.HeapBufferedResponseConsumerFactory(30 * 1024 * 1024 * 1024));
 		COMMON_OPTIONS = builder.build();
+	}
+
+	@Bean
+	public RestHighLevelClient esRestClient() {
+
+			RestClientBuilder builder = RestClient.builder(
+					new HttpHost("192.168.56.10", 9200, "http")
+//                        new HttpHost("localhost", 9201, "http")
+			);
+			RestHighLevelClient client = new RestHighLevelClient(builder);
+			return client;
 	}
 
 }

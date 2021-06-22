@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.louisblogs.common.utils.PageUtils;
 import com.louisblogs.louismall.product.entity.BrandEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,5 +20,7 @@ public interface BrandService extends IService<BrandEntity> {
 
     //冗余存储更新修改
 	void updateDetail(BrandEntity brand);
+
+	List<BrandEntity> getBrandsByIds(List<Long> brandIds);
 }
 

@@ -1,10 +1,15 @@
 package com.louisblogs.louismall.search.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.louisblogs.common.to.es.SkuEsModel;
+import com.louisblogs.common.utils.R;
 import com.louisblogs.louismall.search.config.LouismallElasticSearchConfig;
 import com.louisblogs.louismall.search.constant.EsConstant;
+import com.louisblogs.louismall.search.feign.ProductFeignService;
 import com.louisblogs.louismall.search.service.MallSearchService;
+import com.louisblogs.louismall.search.vo.AttrResponseVo;
+import com.louisblogs.louismall.search.vo.BrandVo;
 import com.louisblogs.louismall.search.vo.SearchParam;
 import com.louisblogs.louismall.search.vo.SearchResult;
 import org.apache.lucene.search.join.ScoreMode;
@@ -33,6 +38,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +55,9 @@ public class MallSearchServiceImpl implements MallSearchService {
 
 	@Autowired
 	RestHighLevelClient client;
+
+	@Autowired
+	ProductFeignService productFeignService;
 
 	/**
 	 * 去es进行检索
@@ -219,7 +229,7 @@ public class MallSearchServiceImpl implements MallSearchService {
 			for (SearchHit hit : hits.getHits()) {
 				String sourceAsString = hit.getSourceAsString();
 				SkuEsModel esModel = JSON.parseObject(sourceAsString, SkuEsModel.class);
-				if (!StringUtils.isEmpty(param.getKeyword())){
+				if (!StringUtils.isEmpty(param.getKeyword())) {
 					HighlightField skuTitle = hit.getHighlightFields().get("skuTitle");
 					String string = skuTitle.getFragments()[0].string();
 					esModel.setSkuTitle(string);
@@ -228,17 +238,18 @@ public class MallSearchServiceImpl implements MallSearchService {
 			}
 		}
 		result.setProducts(esModels);
+
 		//2、当前所有商品涉及到的所有属性信息
 		List<SearchResult.AttrVo> attrVos = new ArrayList<>();
 		ParsedNested attr_agg = response.getAggregations().get("attr_agg");
 		ParsedLongTerms attr_id_agg = attr_agg.getAggregations().get("attr_id_agg");
 		for (Terms.Bucket bucket : attr_id_agg.getBuckets()) {
 			SearchResult.AttrVo attrVo = new SearchResult.AttrVo();
-			//1、得到属性的id
+			//2.1、得到属性的id
 			long attrId = bucket.getKeyAsNumber().longValue();
-			//2、得到属性的名字
-			String attrName= ((ParsedStringTerms) bucket.getAggregations().get("attr_name_agg")).getBuckets().get(0).getKeyAsString();
-			//3、得到属性的所有值
+			//2.2、得到属性的名字
+			String attrName = ((ParsedStringTerms) bucket.getAggregations().get("attr_name_agg")).getBuckets().get(0).getKeyAsString();
+			//2.3、得到属性的所有值
 			List<String> attrValues = ((ParsedStringTerms) bucket.getAggregations().get("attr_value_agg")).getBuckets().stream().map(item -> {
 				String keyAsString = ((Terms.Bucket) item).getKeyAsString();
 				return keyAsString;
@@ -250,16 +261,17 @@ public class MallSearchServiceImpl implements MallSearchService {
 		}
 
 		result.setAttrs(attrVos);
+
 		//3、当前所有商品涉及到的所有品牌信息
 		List<SearchResult.BrandVo> brandVos = new ArrayList<>();
 		ParsedLongTerms brand_agg = response.getAggregations().get("brand_agg");
 		for (Terms.Bucket bucket : brand_agg.getBuckets()) {
 			SearchResult.BrandVo brandVo = new SearchResult.BrandVo();
-			//1、得到品牌的id
+			//3.1、得到品牌的id
 			long brandId = bucket.getKeyAsNumber().longValue();
-			//2、得到品牌的名
+			//3.2、得到品牌的名
 			String brandName = ((ParsedStringTerms) bucket.getAggregations().get("brand_name_agg")).getBuckets().get(0).getKeyAsString();
-			//3、得到品牌的图片
+			//3.3、得到品牌的图片
 			String brandImg = ((ParsedStringTerms) bucket.getAggregations().get("brand_img_agg")).getBuckets().get(0).getKeyAsString();
 			brandVo.setBrandId(brandId);
 			brandVo.setBrandName(brandName);
@@ -267,6 +279,7 @@ public class MallSearchServiceImpl implements MallSearchService {
 			brandVos.add(brandVo);
 		}
 		result.setBrands(brandVos);
+
 		//4、当前所有商品涉及到的所有分类信息
 		ParsedLongTerms catalog_agg = response.getAggregations().get("catalog_agg");
 		List<SearchResult.CatalogVo> catalogVos = new ArrayList<>();
@@ -283,17 +296,91 @@ public class MallSearchServiceImpl implements MallSearchService {
 			catalogVos.add(catalogVo);
 		}
 		result.setCatalogs(catalogVos);
+
 //		=========以上从聚合信息中获取==========
+
 		//5、分页信息-页码
 		result.setPageNum(param.getPageNum());
+
 		//6、分页信息-总记录数
 		long total = hits.getTotalHits().value;
 		result.setTotal(total);
-		//6、分页信息-总页码-计算
+
+		//7、分页信息-总页码-计算
 		int totalPages = (int) total % EsConstant.PRODUCT_PAGESIZE == 0 ? (int) total / EsConstant.PRODUCT_PAGESIZE : ((int) total / EsConstant.PRODUCT_PAGESIZE + 1);
 		result.setTotalPages(totalPages);
 
+		List<Integer> pageNavs = new ArrayList<>();
+		for (int i = 1; i <= totalPages; i++) {
+			pageNavs.add(i);
+		}
+		result.setPageNavs(pageNavs);
 
+		//8、构建面包屑导航功能 属性
+		if (param.getAttrs() != null && param.getAttrs().size() > 0) {
+			List<SearchResult.NavVo> navVos = param.getAttrs().stream().map(attr -> {
+				SearchResult.NavVo navVo = new SearchResult.NavVo();
+				//1 分析每个attrs传过来的查询参数值
+				//attrs=2_5寸:6寸
+				String[] s = attr.split("_");
+				navVo.setNavValue(s[1]);
+				R r = productFeignService.attrInfo(Long.parseLong(s[0]));
+				result.getAttrIds().add(Long.parseLong(s[0]));
+				if (r.getCode() == 0) {
+					//正常返回
+					AttrResponseVo data = r.getData("attr", new TypeReference<AttrResponseVo>() {});
+					navVo.setNavName(data.getAttrName());
+				} else {
+					//如果失败
+					navVo.setNavName(s[0]);
+				}
+
+				//2 取消了面包屑以后 我们要跳转到哪个地方 将请求地址的url里面的当前请求参数置空
+				//拿到所有的查询条件 去掉当前
+				String replace = replaceQueryString(param, attr, "attrs");
+				navVo.setLink("http://search.louismall.com/list.html?" + replace);
+				return navVo;
+			}).collect(Collectors.toList());
+			result.setNavs(navVos);
+		}
+
+		//品牌，分类 面包屑
+		if (param.getBrandId() != null && param.getBrandId().size() > 0) {
+			List<SearchResult.NavVo> navs = result.getNavs();
+			SearchResult.NavVo navVo = new SearchResult.NavVo();
+			navVo.setNavName("品牌");
+			//TODO 远程查询所有平拍
+			R r = productFeignService.BrandsInfo(param.getBrandId());
+			if (r.getCode() == 0) {
+				List<BrandVo> brands = r.getData("brand", new TypeReference<List<BrandVo>>() {
+				});
+				StringBuffer buffer = new StringBuffer();
+				String replace = "";
+				for (BrandVo brandVo : brands) {
+					buffer.append(brandVo.getName() + ";");
+					replace = replaceQueryString(param, brandVo.getBrandId() + "", "brandId");
+				}
+				navVo.setNavValue(buffer.toString());
+				navVo.setLink("http://search.louismall.com/list.html?" + replace);
+			}
+			navs.add(navVo);
+		}
+		//TODO  分类：不需要导航取消
+
+		//返回这个大对象给前端
 		return result;
+	}
+
+	//编写面包屑的功能时，删除指定请求
+	private String replaceQueryString(SearchParam param, String value, String key) {
+		String encode = "";
+		try {
+			encode = URLEncoder.encode(value, "UTF-8");
+			//+ 对应浏览器的%20编码
+			encode = encode.replace("+", "%20");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return param.get_queryString().replace("&" + key + "=" + encode, "");
 	}
 }

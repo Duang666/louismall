@@ -3,6 +3,9 @@ package com.louisblogs.louismall.member.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.louisblogs.common.utils.PageUtils;
 import com.louisblogs.louismall.member.entity.MemberEntity;
+import com.louisblogs.louismall.member.exception.PhoneExistException;
+import com.louisblogs.louismall.member.exception.UsernameExistException;
+import com.louisblogs.louismall.member.vo.MemberRegistVo;
 
 import java.util.Map;
 
@@ -16,5 +19,11 @@ import java.util.Map;
 public interface MemberService extends IService<MemberEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+	void regist(MemberRegistVo vo);
+
+	void checkPhoneUnique(String phone) throws PhoneExistException;
+
+	void checkUsernameUnique(String username) throws UsernameExistException;
 }
 

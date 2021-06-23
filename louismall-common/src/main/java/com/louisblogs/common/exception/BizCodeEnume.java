@@ -1,5 +1,7 @@
 package com.louisblogs.common.exception;
 
+import org.omg.PortableInterceptor.USER_EXCEPTION;
+
 /***
  * 错误码和错误信息定义类
  * 1. 错误码定义规则为5为数字
@@ -13,6 +15,7 @@ package com.louisblogs.common.exception;
  *  12: 订单
  *  13: 购物车
  *  14: 物流
+ *  15: 用户
  *
  *
  */
@@ -22,7 +25,9 @@ public enum BizCodeEnume {
 	UNKNOW_EXCEPTION(10000, "系统未知异常"),
 	VAILD_EXCEPTION(10001, "参数格式校验失败"),
 	SMS_CODE_EXCEPTION(10002, "短信验证码频率太高，稍后再试"),
-	PRODUCT_UP_EXCEPTION(11000, "商品上架异常");
+	PRODUCT_UP_EXCEPTION(11000, "商品上架异常"),
+	USER_EXIST_EXCEPTION(15001,"用户存在"),
+	PHONE_EXIST_EXCEPTION(15002,"手机号存在");
 
 	private int code;
 	private String msg;

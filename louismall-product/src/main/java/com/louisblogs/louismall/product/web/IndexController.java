@@ -1,10 +1,8 @@
 package com.louisblogs.louismall.product.web;
 
-import com.google.common.eventbus.AllowConcurrentEvents;
 import com.louisblogs.louismall.product.entity.CategoryEntity;
 import com.louisblogs.louismall.product.service.CategoryService;
-import com.louisblogs.louismall.product.vo.front.Catelog2Vo;
-import lombok.AllArgsConstructor;
+import com.louisblogs.louismall.product.vo.Catelog2Vo;
 import org.redisson.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -12,16 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @author ：luqi

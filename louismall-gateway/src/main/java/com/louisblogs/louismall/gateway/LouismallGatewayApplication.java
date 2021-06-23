@@ -1,4 +1,4 @@
-package com.louisblogs.louiamall.gateway;
+package com.louisblogs.louismall.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -2,15 +2,13 @@ package com.louisblogs.louismall.product.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.louisblogs.louismall.product.entity.CategoryBrandRelationEntity;
 import com.louisblogs.louismall.product.service.CategoryBrandRelationService;
-import com.louisblogs.louismall.product.vo.front.Catelog2Vo;
+import com.louisblogs.louismall.product.vo.Catelog2Vo;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -31,7 +28,6 @@ import com.louisblogs.louismall.product.entity.CategoryEntity;
 import com.louisblogs.louismall.product.service.CategoryService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import sun.plugin2.util.SystemUtil;
 
 
 @Service("categoryService")

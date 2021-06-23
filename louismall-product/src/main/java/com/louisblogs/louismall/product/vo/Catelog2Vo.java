@@ -1,4 +1,4 @@
-package com.louisblogs.louismall.product.vo.front;
+package com.louisblogs.louismall.product.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

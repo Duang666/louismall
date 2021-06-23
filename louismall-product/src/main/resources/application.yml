@@ -53,3 +53,10 @@ mybatis-plus:
 logging:
   level:
     com.louisblogs.louismall: debug
+
+#配置自定义的线程池
+louismall:
+  thread:
+    core-size: 20
+    max-size: 200
+    keep-alive-time: 10

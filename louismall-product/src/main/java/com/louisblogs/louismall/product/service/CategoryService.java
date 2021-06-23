@@ -3,7 +3,7 @@ package com.louisblogs.louismall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.louisblogs.common.utils.PageUtils;
 import com.louisblogs.louismall.product.entity.CategoryEntity;
-import com.louisblogs.louismall.product.vo.front.Catelog2Vo;
+import com.louisblogs.louismall.product.vo.Catelog2Vo;
 
 import java.util.List;
 import java.util.Map;

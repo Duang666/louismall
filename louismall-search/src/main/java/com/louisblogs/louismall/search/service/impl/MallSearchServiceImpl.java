@@ -110,7 +110,7 @@ public class MallSearchServiceImpl implements MallSearchService {
 		}
 		//1.2.2、bool - filter - 按照品牌id查询
 		if (param.getBrandId() != null && param.getBrandId().size() > 0) {
-			boolQuery.filter(QueryBuilders.termQuery("brandId", param.getBrandId()));
+			boolQuery.filter(QueryBuilders.termsQuery("brandId", param.getBrandId()));
 		}
 		//1.2.3、bool - filter - 按照所有指定的属性进行查询
 		if (param.getAttrs() != null && param.getAttrs().size() > 0) {

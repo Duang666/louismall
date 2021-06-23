@@ -7,7 +7,7 @@ spring:
   application:
     name: louismall-gateway
 
-  # mysql数据库连接
+  # nacos注册中心连接
   cloud:
     nacos:
       discovery:
@@ -69,6 +69,12 @@ spring:
           uri: lb://louismall-search
           predicates:
             - Host=search.louismall.com
+
+        # 配置 louismall-auth-server 服务
+        - id: louismall_auth_route
+          uri: lb://louismall-auth-server
+          predicates:
+            - Host=auth.louismall.com
 
 
 

@@ -20,6 +20,7 @@
         <module>renren-fast</module>            <!-- 8080 -->
         <module>renren-generator</module>       <!-- 80 -->
         <module>louismall-gateway</module>      <!-- 88 -->
+        <module>louismall-auth-server</module>  <!-- 20000 -->
         <module>louismall-third-party</module>  <!-- 30000 -->
     </modules>
 </project>

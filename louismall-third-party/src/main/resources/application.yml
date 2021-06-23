@@ -23,6 +23,11 @@ spring:
         endpoint: oss-cn-beijing.aliyuncs.com
         bucket: louismall
 
+      sms:
+        host: https://zwp.market.alicloudapi.com
+        path: /sms/sendv2
+        appcode: 0c3f3757f5b74beeb79a59975070b36d
+
 # mybatis-plus相关配置
 mybatis-plus:
   # 配置mapper xml文件的路径

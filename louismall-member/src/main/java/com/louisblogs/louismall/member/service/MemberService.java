@@ -5,7 +5,9 @@ import com.louisblogs.common.utils.PageUtils;
 import com.louisblogs.louismall.member.entity.MemberEntity;
 import com.louisblogs.louismall.member.exception.PhoneExistException;
 import com.louisblogs.louismall.member.exception.UsernameExistException;
+import com.louisblogs.louismall.member.vo.MemberLoginVo;
 import com.louisblogs.louismall.member.vo.MemberRegistVo;
+import com.louisblogs.louismall.member.vo.SocialUser;
 
 import java.util.Map;
 
@@ -25,5 +27,10 @@ public interface MemberService extends IService<MemberEntity> {
 	void checkPhoneUnique(String phone) throws PhoneExistException;
 
 	void checkUsernameUnique(String username) throws UsernameExistException;
+
+	MemberEntity login(MemberLoginVo vo);
+
+	MemberEntity login(SocialUser socialUser) throws Exception;
+
 }
 

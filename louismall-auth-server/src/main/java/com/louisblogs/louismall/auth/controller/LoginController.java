@@ -6,6 +6,7 @@ import com.louisblogs.common.exception.BizCodeEnume;
 import com.louisblogs.common.utils.R;
 import com.louisblogs.louismall.auth.feign.MemberFeignService;
 import com.louisblogs.louismall.auth.feign.ThirdPartFeignService;
+import com.louisblogs.louismall.auth.vo.UserLoginVo;
 import com.louisblogs.louismall.auth.vo.UserRegistVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,6 +147,22 @@ public class LoginController {
 
 //		//注册成功回到首页，回到登录页
 //		return "redirect:http://auth.louismall.com/login.html";
+	}
+
+	@PostMapping("/login")
+	public String login(UserLoginVo vo,RedirectAttributes redirectAttributes){
+
+		//远程登录
+		R login = memberFeignService.login(vo);
+		if (login.getCode()==0){
+			// 成功
+			return "redirect:http://louismall.com";
+		}else {
+			Map<String,String> errors = new HashMap<>();
+			errors.put("msg",login.getData("msg",new TypeReference<String>(){}));
+			redirectAttributes.addFlashAttribute("errors",errors);
+			return "redirect:http://auth.louismall.com/login.html";
+		}
 	}
 
 }

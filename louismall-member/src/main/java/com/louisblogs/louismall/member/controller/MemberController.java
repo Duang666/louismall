@@ -7,7 +7,9 @@ import java.util.Map;
 import com.louisblogs.common.exception.BizCodeEnume;
 import com.louisblogs.louismall.member.exception.PhoneExistException;
 import com.louisblogs.louismall.member.exception.UsernameExistException;
+import com.louisblogs.louismall.member.vo.MemberLoginVo;
 import com.louisblogs.louismall.member.vo.MemberRegistVo;
+import com.louisblogs.louismall.member.vo.SocialUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +29,20 @@ import com.louisblogs.common.utils.R;
 @RestController
 @RequestMapping("member/member")
 public class MemberController {
+
 	@Autowired
 	private MemberService memberService;
+
+	@PostMapping("/oauth2/login")
+	public R oauthLogin(@RequestBody SocialUser socialUser) throws Exception {
+		MemberEntity entity = memberService.login(socialUser);
+		//TODO 1、登录成功处理
+		if (entity!=null){
+			return R.ok().setData(entity);
+		}else {
+			return R.error(BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getCode(), BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getMsg());
+		}
+	}
 
 	/**
 	 * 列表
@@ -39,6 +53,17 @@ public class MemberController {
 		PageUtils page = memberService.queryPage(params);
 
 		return R.ok().put("page", page);
+	}
+
+	@PostMapping("/login")
+	public R login(@RequestBody MemberLoginVo vo){
+		MemberEntity entity = memberService.login(vo);
+		if (entity!=null){
+			//TODO 1、登录成功处理
+			return R.ok();
+		}else {
+			return R.error(BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getCode(), BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getMsg());
+		}
 	}
 
 	/**

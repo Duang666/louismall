@@ -1,28 +1,23 @@
-package com.louisblogs.louismall.member.entity;
+package com.louisblogs.louismall.auth.vo;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.io.Serializable;
-import java.util.Date;
 import lombok.Data;
+import lombok.ToString;
+
+import java.util.Date;
 
 /**
- * 会员
- * 
- * @author luqi
- * @email lq844040753@163.com
- * @date 2021-05-17 11:04:55
+ * @author ：luqi
+ * @description：TODO
+ * @date ：2021/6/24 17:00
  */
+
+@ToString
 @Data
-@TableName("ums_member")
-public class MemberEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class MemberRespVo {
 
 	/**
 	 * id
 	 */
-	@TableId
 	private Long id;
 	/**
 	 * 会员等级id
@@ -104,4 +99,5 @@ public class MemberEntity implements Serializable {
 	 * 访问令牌的过期时间
 	 */
 	private Long expiresIn;
+
 }

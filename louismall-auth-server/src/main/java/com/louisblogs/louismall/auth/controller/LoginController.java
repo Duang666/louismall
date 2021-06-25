@@ -4,6 +4,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.louisblogs.common.constant.AuthServerConstant;
 import com.louisblogs.common.exception.BizCodeEnume;
 import com.louisblogs.common.utils.R;
+import com.louisblogs.common.vo.MemberRespVo;
 import com.louisblogs.louismall.auth.feign.MemberFeignService;
 import com.louisblogs.louismall.auth.feign.ThirdPartFeignService;
 import com.louisblogs.louismall.auth.vo.UserLoginVo;
@@ -150,18 +151,37 @@ public class LoginController {
 	}
 
 	@PostMapping("/login")
-	public String login(UserLoginVo vo,RedirectAttributes redirectAttributes){
+	public String login(UserLoginVo vo,RedirectAttributes redirectAttributes,HttpSession session){
 
 		//远程登录
 		R login = memberFeignService.login(vo);
 		if (login.getCode()==0){
-			// 成功
+			//远程登录成功，将远程服务返回的entity放入session中
+			MemberRespVo memberRespVo = login.getData("data", new TypeReference<MemberRespVo>(){});
+			session.setAttribute(AuthServerConstant.LOGIN_USER, memberRespVo);
 			return "redirect:http://louismall.com";
 		}else {
 			Map<String,String> errors = new HashMap<>();
 			errors.put("msg",login.getData("msg",new TypeReference<String>(){}));
 			redirectAttributes.addFlashAttribute("errors",errors);
 			return "redirect:http://auth.louismall.com/login.html";
+		}
+	}
+
+	/**
+	 * 处理已经登录的用户，误操作到登录页面
+	 */
+	@GetMapping("/login.html")
+	public String loginPage(HttpSession session) {
+
+		//判断用户是否已经登录
+		Object attribute = session.getAttribute(AuthServerConstant.LOGIN_USER);
+		if (attribute == null) {
+			//没有登录过 可以跳转到登录页面
+			return "login";
+		}else {
+			//已经登录，禁止跳转到登录页，跳转首页即可
+			return "redirect:http://louismall.com";
 		}
 	}
 

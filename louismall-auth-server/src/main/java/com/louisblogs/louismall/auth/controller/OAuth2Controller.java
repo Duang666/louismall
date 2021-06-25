@@ -35,7 +35,7 @@ public class OAuth2Controller {
 	MemberFeignService memberFeignService;
 
 	@GetMapping("/oauth2.0/weibo/success")
-	public String weibo(@RequestParam("code") String code, HttpSession session, HttpServletResponse servletResponse, HttpServletRequest request) throws Exception {
+	public String weibo(@RequestParam("code") String code, HttpSession session) throws Exception {
 
 		Map<String, String> map = new HashMap<>();
 		map.put("client_id", "2103634004");//和login.html的要保持一致

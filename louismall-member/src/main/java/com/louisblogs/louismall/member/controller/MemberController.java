@@ -36,7 +36,6 @@ public class MemberController {
 	@PostMapping("/oauth2/login")
 	public R oauthLogin(@RequestBody SocialUser vo) throws Exception {
 		MemberEntity entity = memberService.login(vo);
-		//TODO 1、登录成功处理
 		if (entity!=null){
 			return R.ok().setData(entity);
 		}else {
@@ -59,8 +58,7 @@ public class MemberController {
 	public R login(@RequestBody MemberLoginVo vo){
 		MemberEntity entity = memberService.login(vo);
 		if (entity!=null){
-			//TODO 1、登录成功处理
-			return R.ok();
+			return R.ok().setData(entity);
 		}else {
 			return R.error(BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getCode(), BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getMsg());
 		}

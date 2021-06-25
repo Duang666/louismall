@@ -5,6 +5,7 @@ import com.louisblogs.louismall.auth.vo.SocialUser;
 import com.louisblogs.louismall.auth.vo.UserLoginVo;
 import com.louisblogs.louismall.auth.vo.UserRegistVo;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -24,6 +25,6 @@ public interface MemberFeignService {
 	R login(@RequestBody UserLoginVo vo);
 
 	@PostMapping("/member/member/oauth2/login")
-	 R oauthLogin(@RequestBody SocialUser socialUser) throws Exception;
+	R oauthLogin(@RequestBody SocialUser vo) throws Exception;
 
 }

@@ -3,10 +3,6 @@ server:
   port: 8000
 
 spring:
-  # 服务名
-  application:
-    name: louismall-member
-
   # mysql数据库连接
   datasource:
     url: jdbc:mysql://192.168.56.10:3306/louismall_ums?useUnicode=true&characterEncoding=utf-8

@@ -96,8 +96,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
 		String password = vo.getPassword();
 
 		//1、去数据库查询 SELECT * FROM `ums_member` WHERE username=? OR mobile=?
-		MemberDao memberDao = this.baseMapper;
-		MemberEntity entity = memberDao.selectOne(new QueryWrapper<MemberEntity>().eq("username", loginacct)
+		MemberEntity entity = this.baseMapper.selectOne(new QueryWrapper<MemberEntity>().eq("username", loginacct)
 				.or().eq("mobile", loginacct));
 		if (entity == null) {
 			//登录失败
@@ -117,28 +116,28 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
 	}
 
 	@Override
-	public MemberEntity login(SocialUser socialUser) throws Exception {
+	public MemberEntity login(SocialUser socialUser){
 		//登录和注册合并逻辑
 		String uid = socialUser.getUid();
 		//1、判断当前社交用户是否已经登录过系统
 		MemberDao memberDao = this.baseMapper;
-		MemberEntity memberEntity = memberDao.selectOne(new QueryWrapper<MemberEntity>().eq("social_uid", uid));
-		if (memberEntity != null) {
+		MemberEntity oldEntity = memberDao.selectOne(new QueryWrapper<MemberEntity>().eq("social_uid", uid));
+		if (oldEntity != null) {
 			//这个用户已经注册了
-			MemberEntity update = new MemberEntity();
-			update.setId(memberEntity.getId());
-			update.setAccessToken(socialUser.getAccess_token());
-			update.setExpiresIn(socialUser.getExpires_in());
+			MemberEntity newEntity = new MemberEntity();
+			newEntity.setId(oldEntity.getId());
+			newEntity.setAccessToken(socialUser.getAccess_token());
+			newEntity.setExpiresIn(socialUser.getExpires_in());
 
-			memberDao.updateById(update);
+			memberDao.updateById(newEntity);
 
-			memberEntity.setAccessToken(socialUser.getAccess_token());
-			memberEntity.setExpiresIn(socialUser.getExpires_in());
-			return memberEntity;
+			oldEntity.setAccessToken(socialUser.getAccess_token());
+			oldEntity.setExpiresIn(socialUser.getExpires_in());
+			return oldEntity;
 		} else {
 			//2、没有查到当前社交用户对应的记录我们就需要注册一个
 			MemberEntity regist = new MemberEntity();
-			try{
+			try {
 				//3、查询当前社交用户的社交账号信息（昵称、性别等）
 				Map<String, String> query = new HashMap<>();
 				query.put("access_token", socialUser.getAccess_token());
@@ -155,7 +154,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
 					regist.setGender("m".equals(gender) ? 1 : 0);
 					//....
 				}
-			}catch (Exception e){}
+			} catch (Exception e) {
+			}
 			regist.setSocialUid(socialUser.getUid());//防止下一次登录再次注册
 			regist.setAccessToken(socialUser.getAccess_token());
 			regist.setExpiresIn(socialUser.getExpires_in());

@@ -1,8 +1,9 @@
-package com.louisblogs.louismall.auth.vo;
+package com.louisblogs.common.vo;
 
 import lombok.Data;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Date;
 
 @ToString
 @Data
-public class MemberRespVo {
+public class MemberRespVo implements Serializable {
 
 	/**
 	 * id

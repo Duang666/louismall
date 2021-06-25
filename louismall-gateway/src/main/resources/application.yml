@@ -58,19 +58,21 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
 
-        # 配置 louismall-host-route 服务
+
+        # nginx负载均衡
+        # product服务转发
         - id: louismall_host_route
           uri: lb://louismall-product
           predicates:
             - Host=louismall.com,item.louismall.com
 
-        # 配置 louismall-search-route 服务
+        # search服务转发
         - id: louismall_search_route
           uri: lb://louismall-search
           predicates:
             - Host=search.louismall.com
 
-        # 配置 louismall-auth-server 服务
+        # auth服务转发
         - id: louismall_auth_route
           uri: lb://louismall-auth-server
           predicates:

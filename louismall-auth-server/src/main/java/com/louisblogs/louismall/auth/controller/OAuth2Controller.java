@@ -5,7 +5,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.louisblogs.common.utils.HttpUtils;
 import com.louisblogs.common.utils.R;
 import com.louisblogs.louismall.auth.feign.MemberFeignService;
-import com.louisblogs.louismall.auth.vo.MemberRespVo;
+import com.louisblogs.common.vo.MemberRespVo;
 import com.louisblogs.louismall.auth.vo.SocialUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +35,7 @@ public class OAuth2Controller {
 	MemberFeignService memberFeignService;
 
 	@GetMapping("/oauth2.0/weibo/success")
-	public String weibo(@RequestParam("code") String code, HttpSession session) throws Exception {
+	public String weibo(@RequestParam("code") String code, HttpSession session, HttpServletResponse servletResponse, HttpServletRequest request) throws Exception {
 
 		Map<String, String> map = new HashMap<>();
 		map.put("client_id", "2103634004");//和login.html的要保持一致
@@ -55,9 +57,9 @@ public class OAuth2Controller {
 			//2） 多次用 微博 进行 社交登录=>登录
 			//    登录或者注册这个社交用户
 			//由远程服务来做判断
-			R oauthLogin = memberFeignService.oauthLogin(socialUser);
-			if (oauthLogin.getCode() == 0) {
-				MemberRespVo data = oauthLogin.getData("data", new TypeReference<MemberRespVo>(){});
+			R r = memberFeignService.oauthLogin(socialUser);
+			if (r.getCode() == 0) {
+				MemberRespVo data = r.getData("data", new TypeReference<MemberRespVo>(){});
 				log.info("社交登录成功，用户信息为：{}" + data.toString());
 				//1 第一次使用SESSION 命令浏览器保存JSESSIONID的cookie
 				//以后浏览器访问哪个网站就会带上这个网站的cookie
@@ -66,7 +68,7 @@ public class OAuth2Controller {
 				//TODO 1 默认发的令牌 session=asdfg 作用域是当前域：解决子域session共享问题
 				//TODO 2 希望使用json序列化对象到redis中
 				//远程登录成功，将远程服务返回的entity放入session中
-//				session.setAttribute(AuthServiceConstant.LOGIN_USER, memberResVo);
+				session.setAttribute("loginUser", data);
 //                servletResponse.addCookie(new Cookie("JSESSIONID", "dada").setDomain());
 				//登录成功 -> 跳转首页
 				return "redirect:http://louismall.com";

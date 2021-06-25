@@ -28,6 +28,7 @@ import com.louisblogs.common.utils.R;
 @RestController
 @RequestMapping("member/memberloginlog")
 public class MemberLoginLogController {
+
     @Autowired
     private MemberLoginLogService memberLoginLogService;
 

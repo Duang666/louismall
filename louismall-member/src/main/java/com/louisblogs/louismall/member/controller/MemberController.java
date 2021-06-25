@@ -34,8 +34,8 @@ public class MemberController {
 	private MemberService memberService;
 
 	@PostMapping("/oauth2/login")
-	public R oauthLogin(@RequestBody SocialUser socialUser) throws Exception {
-		MemberEntity entity = memberService.login(socialUser);
+	public R oauthLogin(@RequestBody SocialUser vo) throws Exception {
+		MemberEntity entity = memberService.login(vo);
 		//TODO 1、登录成功处理
 		if (entity!=null){
 			return R.ok().setData(entity);

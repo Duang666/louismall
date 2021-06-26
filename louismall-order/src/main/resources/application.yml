@@ -20,6 +20,23 @@ spring:
       discovery:
         server-addr: 127.0.0.1:8848
 
+  # RabbitMQ配置
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    virtual-host: /
+    # 开启发送端确认
+    publisher-confirms: true
+    # 开启发送端消息抵达队列的确认
+    publisher-returns: true
+    # 只要抵达队列，以异步发送优先回调我们这个returnconfirm
+    template:
+      mandatory: true
+    # 手动ack消息
+    listener:
+      simple:
+        acknowledge-mode: manual
+
 # 配置mapper xml文件的路径
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml

@@ -1,13 +1,13 @@
-# \u670D\u52A1\u7AEF\u53E3
+# 服务端口
 server:
   port: 20000
 
 spring:
-  # \u670D\u52A1\u540D
+  # 服务名
   application:
     name: louismall-auth-server
 
-  # nacos\u670D\u52A1\u5730\u5740
+  # 配置nacos注册中心
   cloud:
     nacos:
       discovery:

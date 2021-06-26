@@ -78,5 +78,11 @@ spring:
           predicates:
             - Host=auth.louismall.com
 
+        #cart服务转发
+        - id: louismall_cart_route
+          uri: lb://louismall-cart
+          predicates:
+            - Host=cart.louismall.com
+
 
 

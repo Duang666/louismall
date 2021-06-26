@@ -22,6 +22,7 @@
         <module>louismall-gateway</module>      <!-- 88 -->
         <module>louismall-auth-server</module>  <!-- 20000 -->
         <module>louismall-third-party</module>  <!-- 30000 -->
+        <module>louismall-cart</module>         <!-- 40000 -->
         <module>louismall-test-sso-server</module>  <!-- 8080 -->
         <module>louismall-test-sso-client</module>  <!-- 8081 -->
         <module>louismall-test-sso-client2</module> <!-- 8082 -->

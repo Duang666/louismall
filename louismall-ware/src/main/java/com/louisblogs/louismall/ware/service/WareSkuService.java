@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.louisblogs.common.to.SkuHasStockVo;
 import com.louisblogs.common.utils.PageUtils;
 import com.louisblogs.louismall.ware.entity.WareSkuEntity;
+import com.louisblogs.louismall.ware.vo.LockStockResult;
+import com.louisblogs.louismall.ware.vo.WareSkuLockVo;
 
 import java.util.List;
 import java.util.Map;
@@ -22,5 +24,7 @@ public interface WareSkuService extends IService<WareSkuEntity> {
 	void addStock(Long skuId, Long wareId, Integer skuNum);
 
 	List<SkuHasStockVo> getSkuHasStock(List<Long> skuIds);
+
+	Boolean  orderLockStock(WareSkuLockVo vo);
 }
 

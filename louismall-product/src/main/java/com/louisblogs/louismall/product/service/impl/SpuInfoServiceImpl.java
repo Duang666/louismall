@@ -13,6 +13,7 @@ import com.louisblogs.louismall.product.feign.SearchFeignService;
 import com.louisblogs.louismall.product.feign.WareFeignService;
 import com.louisblogs.louismall.product.service.*;
 import com.louisblogs.louismall.product.vo.*;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,6 +84,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 		return new PageUtils(page);
 	}
 
+//	@GlobalTransactional
 	@Transactional
 	@Override
 	public void saveSpuInfo(SpuSaveVo vo) {
@@ -335,6 +337,14 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
 
 		}
+	}
+
+	@Override
+	public SpuInfoEntity getSpuInfoBySkuId(Long skuId) {
+		SkuInfoEntity byId = skuInfoService.getById(skuId);
+		Long spuId = byId.getSpuId();
+		SpuInfoEntity entity = getById(spuId);
+		return entity;
 	}
 
 }

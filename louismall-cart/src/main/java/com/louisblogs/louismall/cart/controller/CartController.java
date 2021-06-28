@@ -32,7 +32,7 @@ public class CartController {
 	CartService cartService;
 
 	/**
-	 * 给远程gulimall-order调用
+	 * 给远程louismall-order调用
 	 */
 	@ResponseBody
 	@GetMapping("/currentUserItems")

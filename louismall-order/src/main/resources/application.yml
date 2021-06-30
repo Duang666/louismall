@@ -19,6 +19,9 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    alibaba:
+      seata:
+        tx-service-group: louisamall-order-fescar-service-group
 
   # redis
   redis:
@@ -30,7 +33,7 @@ spring:
 
   # RabbitMQ配置
   rabbitmq:
-    host: 127.0.0.1
+    host: 192.168.56.10
     port: 5672
     virtual-host: /
     # 开启发送端确认
@@ -62,3 +65,8 @@ louismall:
     core-size: 20
     max-size: 200
     keep-alive-time: 10
+
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000

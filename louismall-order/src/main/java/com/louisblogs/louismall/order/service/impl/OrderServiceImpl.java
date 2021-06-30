@@ -6,7 +6,6 @@ import com.louisblogs.common.exception.NoStockException;
 import com.louisblogs.common.utils.R;
 import com.louisblogs.common.vo.MemberRespVo;
 import com.louisblogs.louismall.order.constant.OrderConstant;
-import com.louisblogs.louismall.order.dao.OrderItemDao;
 import com.louisblogs.louismall.order.entity.OrderItemEntity;
 import com.louisblogs.louismall.order.enume.OrderStatusEnum;
 import com.louisblogs.louismall.order.feign.CartFeignService;
@@ -16,8 +15,11 @@ import com.louisblogs.louismall.order.feign.WareFeignService;
 import com.louisblogs.louismall.order.interceptor.LoginUserInterceptor;
 import com.louisblogs.louismall.order.service.OrderItemService;
 import com.louisblogs.louismall.order.to.OrderCreatTo;
+import com.louisblogs.common.to.mq.OrderTo;
 import com.louisblogs.louismall.order.vo.*;
-import io.seata.spring.annotation.GlobalTransactional;
+//import io.seata.spring.annotation.GlobalTransactional;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -71,6 +73,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
 	@Autowired
 	ThreadPoolExecutor executor;
+
+	@Autowired
+	RabbitTemplate rabbitTemplate;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -219,12 +224,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 					//库存成功了，但是网络原因超时了，订单回滚，库存不回滚
 //                    int i = 1 / 0;//模拟积分系统异常
 					//TODO 订单创建成功，发消息给MQ
-//					rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", orderCreatTo.getOrder());
+					rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", orderCreatTo.getOrder());
 					return responseVo;
 				} else {
 					//锁定失败
-					String msg1 = (String) r.get("msg");
-					throw new NoStockException(msg1);
+					String msg = (String) r.get("msg");
+					throw new NoStockException(msg);
 				}
 			} else {
 				responseVo.setCode(2);
@@ -233,48 +238,48 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 		}
 	}
 
-//	/**
-//	 * 按照订单号查询订单
-//	 */
-//	@Override
-//	public OrderEntity getOrderByOrderSn(String orderSn) {
-//
-//		OrderEntity entity = this.getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
-//		return entity;
-//	}
-//
-//	/**
-//	 * 超过30分钟，关闭订单
-//	 */
-//	@Override
-//	public void closeOrder(OrderEntity entity) {
-//
-//		//先来查询当前这个订单的最新状态
-//		OrderEntity orderEntity = this.getById(entity.getId());
-//		//需要关单的状态是：代付款 0
-//		if (orderEntity.getStatus() == OrderStatusEnum.CREATE_NEW.getCode()) {
-//			//关单
-//			OrderEntity updateOrder = new OrderEntity();
-//			updateOrder.setId(entity.getId());
-//			updateOrder.setStatus(OrderStatusEnum.CANCLED.getCode());
-//			this.updateById(updateOrder);
-//			//发给MQ一个
-//			OrderTo orderTo = new OrderTo();
-//			BeanUtils.copyProperties(orderEntity, orderTo);
-//			rabbitTemplate.convertAndSend("order-event-exchange", "order.release.other", orderTo);
-////            try {
-////                //TODO 保证消息100%发送出去，每一个消息都做好日志记录 (给数据库保存每一个消息的详细信息)
-////                //TODO 定期扫描数据库 将失败的消息再发送一遍
-////                rabbitTemplate.convertAndSend("order-event-exchange", "order.release.order", orderTo);
-////            } catch (Exception e) {
-////                //TODO 将没发送出去的想消息进行重复发送 while
-////            }
-//		}
-//	}
-//
-//	/**
-//	 * 获取当前订单的支付信息 PayVo
-//	 */
+	/**
+	 * 按照订单号查询订单
+	 */
+	@Override
+	public OrderEntity getOrderByOrderSn(String orderSn) {
+
+		OrderEntity entity = this.getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
+		return entity;
+	}
+
+	/**
+	 * 超过30分钟，关闭订单
+	 */
+	@Override
+	public void closeOrder(OrderEntity entity) {
+
+		//先来查询当前这个订单的最新状态
+		OrderEntity orderEntity = this.getById(entity.getId());
+		//需要关单的状态是：代付款 0
+		if (orderEntity.getStatus() == OrderStatusEnum.CREATE_NEW.getCode()) {
+			//关单
+			OrderEntity updateOrder = new OrderEntity();
+			updateOrder.setId(entity.getId());
+			updateOrder.setStatus(OrderStatusEnum.CANCLED.getCode());
+			this.updateById(updateOrder);
+			//发给MQ一个
+			OrderTo orderTo = new OrderTo();
+			BeanUtils.copyProperties(orderEntity, orderTo);
+			rabbitTemplate.convertAndSend("order-event-exchange", "order.release.other", orderTo);
+//            try {
+//                //TODO 保证消息100%发送出去，每一个消息都做好日志记录 (给数据库保存每一个消息的详细信息)
+//                //TODO 定期扫描数据库 将失败的消息再发送一遍
+//                rabbitTemplate.convertAndSend("order-event-exchange", "order.release.order", orderTo);
+//            } catch (Exception e) {
+//                //TODO 将没发送出去的想消息进行重复发送 while
+//            }
+		}
+	}
+
+	/**
+	 * 获取当前订单的支付信息 PayVo
+	 */
 //	@Override
 //	public PayVo getPayOrder(String orderSn) {
 //
@@ -297,11 +302,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 //		//返回给前端这个大对象
 //		return payVo;
 //	}
-//
-//	/**
-//	 * 给远程服务使用的
-//	 * 查询当前登录用户的所有订单详情数据（分页）
-//	 */
+
+	/**
+	 * 给远程服务使用的
+	 * 查询当前登录用户的所有订单详情数据（分页）
+	 */
 //	@Override
 //	public PageUtils queryPageWithItem(Map<String, Object> params) {
 //
@@ -326,13 +331,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 //
 //		return new PageUtils(page);
 //	}
-//
-//	/**
-//	 * 处理支付宝返回的数据
-//	 * <p>
-//	 * 只要我们收到了，支付宝给我们的一步的通知，告诉我订单支付成功
-//	 * 返回success，支付宝就再也不通知
-//	 */
+
+	/**
+	 * 处理支付宝返回的数据
+	 * <p>
+	 * 只要我们收到了，支付宝给我们的一步的通知，告诉我订单支付成功
+	 * 返回success，支付宝就再也不通知
+	 */
 //	@Override
 //	public String handlePayResult(PayAsyncVo payAsyncVo) {
 //
@@ -352,7 +357,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 //		}
 //		return "success";
 //	}
-//
+
 //	@Override
 //	public void creatSeckillOrder(SeckillOrderTo seckillOrderTo) {
 //

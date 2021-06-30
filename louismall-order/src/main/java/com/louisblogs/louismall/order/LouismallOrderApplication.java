@@ -1,5 +1,7 @@
 package com.louisblogs.louismall.order;
 
+import com.alibaba.cloud.seata.GlobalTransactionAutoConfiguration;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
@@ -67,11 +69,11 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 //开启feign客户度的远程调用功能
 //扫描feign文件夹下的带有@FeignClient注解的接口
 @EnableDiscoveryClient
-@EnableRabbit
-@EnableRedisHttpSession
+//@EnableRabbit
+//@EnableRedisHttpSession
 @EnableFeignClients(basePackages = "com.louisblogs.louismall.order.feign")
 @MapperScan("com.louisblogs.louismall.order.dao")
-@SpringBootApplication
+@SpringBootApplication(exclude = GlobalTransactionAutoConfiguration.class)
 public class LouismallOrderApplication {
 
 	public static void main(String[] args) {

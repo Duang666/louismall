@@ -36,7 +36,7 @@ public class WareSkuController {
 	/**
 	 * 为某个订单锁定库存
 	 */
-	@PostMapping("/look/order")
+	@PostMapping("/lock/order")
 	public R orderLockStock(@RequestBody WareSkuLockVo vo) {
 		Boolean b = null;
 		try {
@@ -52,7 +52,6 @@ public class WareSkuController {
 	 */
 	@PostMapping("/hasStock")
 	public R getSkuHasStock(@RequestBody List<Long> skuIds) {
-
 		//sku_id, stock
 		List<SkuHasStockVo> vos = wareSkuService.getSkuHasStock(skuIds);
 

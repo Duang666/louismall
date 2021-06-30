@@ -1,9 +1,8 @@
-package com.louisblogs.louismall.order.config;
+package com.louisblogs.louismall.ware.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import io.seata.rm.datasource.DataSourceProxy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.util.StringUtils;
@@ -16,7 +15,7 @@ import javax.sql.DataSource;
  * @date ：2021/6/28 19:54
  */
 
-@Configurable
+//@Configurable
 public class MySeataConfig {
 
 	@Autowired

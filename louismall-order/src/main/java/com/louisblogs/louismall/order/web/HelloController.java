@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * @author ：luqi
@@ -24,9 +25,10 @@ public class HelloController {
 
 	@ResponseBody
 	@GetMapping("/test/creatPOrder")
-	public String creatPOrderTest() {
+	public String creatOrderTest() {
 		OrderEntity entity = new OrderEntity();
 		entity.setOrderSn("10010");
+//		entity.setOrderSn(UUID.randomUUID().toString());
 		entity.setModifyTime(new Date());
 
 		//给MQ发消息

@@ -5,11 +5,7 @@ import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.louisblogs.louismall.order.entity.OrderEntity;
 import com.louisblogs.louismall.order.service.OrderService;
@@ -30,6 +26,16 @@ import com.louisblogs.common.utils.R;
 public class OrderController {
     @Autowired
     private OrderService orderService;
+
+	/**
+	 * 按照订单号查询订单
+	 */
+	@GetMapping("/status/{orderSn}")
+	public R getOrderStatus(@PathVariable("orderSn") String orderSn) {
+
+		OrderEntity entity = orderService.getOrderByOrderSn(orderSn);
+		return R.ok().setData(entity);
+	}
 
     /**
      * 列表

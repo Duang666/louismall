@@ -1,22 +1,28 @@
 package com.louisblogs.louismall.order.config;
 
+import com.louisblogs.louismall.order.entity.OrderEntity;
+import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author ：luqi
- * @date ：2021/6/26 11:19
+ * @date ：2021/6/28 21:57
  * @description创建RabbitMQ 队列 交换机
  * 运行之前，一定要小心，否则要删除队列/交换机重新运行 麻烦！
  *
@@ -31,13 +37,12 @@ import java.util.Map;
  *  1 增加更多的消费者
  *  2 上线专门的队列消费服务，取出来，记录到数据库，离线慢慢处理
  */
-
 //开启RabbitMQ消息队列 不监听消息可以不加
 @EnableRabbit
 @Configuration
-public class MyRabbitConfig {
+public class MyRabbitMQConfig {
 
-	//    @Autowired
+	@Autowired
 	RabbitTemplate rabbitTemplate;
 
 	//TODO RabbitTemplate
@@ -52,7 +57,7 @@ public class MyRabbitConfig {
 	}
 
 
-	//    @RabbitListener(queues = "order.release.order.queue")
+//	@RabbitListener(queues = "order.release.order.queue")
 //    public void listening(OrderEntity entity, Channel channel, Message message) throws IOException {
 //        System.out.println("收到过期的订单，准备关闭订单。order："+entity.getOrderSn());
 //        channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
@@ -61,7 +66,6 @@ public class MyRabbitConfig {
 	//容器中的组建Queue Exchange Binding 都会自动创建（前提是RabbitMQ没有）
 	@Bean
 	public Queue orderDelayQueue() {
-
 		// String name, boolean durable, boolean exclusive, boolean autoDelete,
 		//			@Nullable Map<String, Object> arguments
 		Map<String, Object> arguments = new HashMap<>();
@@ -73,14 +77,12 @@ public class MyRabbitConfig {
 
 	@Bean
 	public Queue orderReleaseOrderQueue() {
-
 		//普通队列
 		return new Queue("order.release.order.queue", true, false, false);
 	}
 
 	@Bean
 	public Exchange orderEventExchange() {
-
 		// String name, boolean durable, boolean autoDelete, Map<String, Object> arguments
 		//普通交换机
 		return new TopicExchange("order-event-exchange", true, false);
@@ -88,7 +90,6 @@ public class MyRabbitConfig {
 
 	@Bean
 	public Binding orderCreateOrderBinding() {
-
 		//和延时队列绑定
 		return new Binding("order.delay.queue",
 				Binding.DestinationType.QUEUE,
@@ -99,7 +100,6 @@ public class MyRabbitConfig {
 
 	@Bean
 	public Binding orderReleaseOrderBinding() {
-
 		//和普通队列绑定
 		return new Binding("order.release.order.queue",
 				Binding.DestinationType.QUEUE,
@@ -110,7 +110,6 @@ public class MyRabbitConfig {
 
 	@Bean
 	public Binding orderReleaseOtherBinding() {
-
 		//订单释放直接和库存释放进行绑定
 		return new Binding("stock.release.stock.queue",
 				Binding.DestinationType.QUEUE,
@@ -119,31 +118,25 @@ public class MyRabbitConfig {
 				null);
 	}
 
-	@Bean
-	public Queue orderSeckillOrderQueue() {
-
-		//是否持久化的 是否排他的(大家都能监听，谁抢到算谁的) 是否自动删除
-		return new Queue("order.seckill.order.queue", true, false, false);
-	}
-
-	@Bean
-	public Binding orderSeckillOrderQueueBinding() {
-
-		return new Binding("order.seckill.order.queue",
-				Binding.DestinationType.QUEUE,
-				"order-event-exchange",
-				"order.seckill.order",
-				null);
-	}
+//	@Bean
+//	public Queue orderSeckillOrderQueue() {
+//		//是否持久化的 是否排他的(大家都能监听，谁抢到算谁的) 是否自动删除
+//		return new Queue("order.seckill.order.queue", true, false, false);
+//	}
+//
+//	@Bean
+//	public Binding orderSeckillOrderQueueBinding() {
+//		return new Binding("order.seckill.order.queue",
+//				Binding.DestinationType.QUEUE,
+//				"order-event-exchange",
+//				"order.seckill.order",
+//				null);
+//	}
 
 	/**
 	 * 下面全都是基础配置
 	 */
 
-	/**
-	 * 使用JSON序列化机制，进行消息转换
-	 * @return
-	 */
 	@Bean
 	public MessageConverter messageConverter() {
 		return new Jackson2JsonMessageConverter();
@@ -152,7 +145,6 @@ public class MyRabbitConfig {
 	/**
 	 * 定制rabbitTemplate
 	 * 1.publisher-confirms: true
-	 * 2.设置确认回调
 	 * 3.消费端确认 (保证每个消息被正确消费 此时才可以braker删除这个消息)
 	 * 1.默认是自动确认的 只要消息接收到  客户端自动确认服务端就要移除这个消息
 	 * 问题 ：
@@ -192,7 +184,7 @@ public class MyRabbitConfig {
 			 */
 			@Override
 			public void returnedMessage(Message message, int replyCode, String replyText, String exchange, String routingKey) {
-				//报错误 未收到消息
+				//报错误 未收到消息.修改数据库当前消息的状态->错误
 				System.out.println("Fail!! Message[" + message + "]==>[" + exchange + "]==>routingKey[" + routingKey + "]");
 			}
 		});

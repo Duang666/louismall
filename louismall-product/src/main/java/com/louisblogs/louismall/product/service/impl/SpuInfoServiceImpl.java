@@ -13,7 +13,7 @@ import com.louisblogs.louismall.product.feign.SearchFeignService;
 import com.louisblogs.louismall.product.feign.WareFeignService;
 import com.louisblogs.louismall.product.service.*;
 import com.louisblogs.louismall.product.vo.*;
-import io.seata.spring.annotation.GlobalTransactional;
+//import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,6 +84,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 		return new PageUtils(page);
 	}
 
+	//seata AT 分布式事务
 //	@GlobalTransactional
 	@Transactional
 	@Override

@@ -21,7 +21,7 @@ import java.util.UUID;
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
-class LouismallOrderApplicationTests {
+public class LouismallOrderApplicationTests {
 
 	@Autowired
 	AmqpAdmin amqpAdmin;

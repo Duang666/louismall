@@ -51,6 +51,9 @@ spring:
   thymeleaf:
     cache: false
 
+  mvc:
+    date-format: yyyy-MM-dd HH:mm:ss
+
 # 配置mapper xml文件的路径
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
@@ -70,3 +73,5 @@ louismall:
 ribbon:
   ReadTimeout: 60000
   ConnectTimeout: 60000
+
+

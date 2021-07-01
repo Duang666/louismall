@@ -90,5 +90,11 @@ spring:
           predicates:
             - Host=order.louismall.com
 
+        #member服务转发
+        - id: louismall_member_route
+          uri: lb://louismall-member
+          predicates:
+            - Host=member.louismall.com
+
 
 

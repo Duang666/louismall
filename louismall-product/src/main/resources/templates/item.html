@@ -516,8 +516,15 @@
               <span>￥</span>
               <span th:text="${#numbers.formatDecimal(item.info.price,3,2)}">4499.00</span>
             </li>
-            <li>
-              预约享资格
+            <li style="color: red;" th:if="${item.seckillSkuInfoVo != null}">
+							<span th:if="${#dates.createNow().getTime() < item.seckillSkuInfoVo.startTime}">
+									商品将会在{[[${#dates.format(new java.util.Date(item.seckillSkuInfoVo.startTime),"yyyy-MM-dd HH:mm:ss")}]]
+                                - [[${#dates.format(new java.util.Date(item.seckillSkuInfoVo.endTime),"yyyy-MM-dd HH:mm:ss")}]]}进行抢购
+							</span>
+
+              <span th:if="${#dates.createNow().getTime() >= item.seckillSkuInfoVo.startTime && #dates.createNow().getTime() <= item.seckillSkuInfoVo.endTime}">
+										秒杀价：[[${#numbers.formatDecimal(item.seckillSkuInfoVo.seckillPrice,1,2)}]] | 秒杀结束时间：[[${#dates.format(new java.util.Date(item.seckillSkuInfoVo.endTime),"yyyy-MM-dd HH:mm:ss")}]]
+							</span>
             </li>
             <li>
               <a href="/static/item/">
@@ -636,8 +643,15 @@
 
             </div>
           </div>
-          <div class="box-btns-two">
-            <a href="#" id="addToCartA" th:attr="skuId=${item.info.skuId}">
+          <div class="box-btns-two"
+               th:if="${item.seckillSkuInfoVo != null && #dates.createNow().getTime()>=item.seckillSkuInfoVo.startTime && #dates.createNow().getTime()<=item.seckillSkuInfoVo.endTime}">
+            <a href="#" id="seckillA"
+               th:attr="skuId = ${item.info.skuId},sessionId=${item.seckillSkuInfoVo.promotionSessionId},code=${item.seckillSkuInfoVo.randomCode}">
+              立即抢购
+            </a>
+          </div>
+          <div class="box-btns-two"th:if="${item.seckillSkuInfoVo == null || #dates.createNow().getTime()< item.seckillSkuInfoVo.startTime || #dates.createNow().getTime()>item.seckillSkuInfoVo.endTime}">
+            <a href="#" id="addToCartA" th:attr="skuId = ${item.info.skuId}">
               加入购物车
             </a>
           </div>
@@ -1326,13 +1340,14 @@
         location.href = "http://cart.louismall.com/addToCart?skuId=" + skuId + "&num=" + num;
         return false;
     })
+
     $("#seckillA").click(function () {
         var isLogin = [[${session.loginUser != null}]]
         if (isLogin) {
             var killId = $(this).attr("sessionid") + "场->" + $(this).attr("skuid");
             var key = $(this).attr("code");
             var num = $("#numInput").val();
-            location.href = "http://seckill.gulimall.com/kill?killId=" + killId + "&key=" + key + "&num=" + num + "";
+            location.href = "http://seckill.louismall.com/kill?killId=" + killId + "&key=" + key + "&num=" + num + "";
             return false
         } else {
             alert("秒杀前你得请先登录鸭=(^.^)=");

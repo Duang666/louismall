@@ -1,6 +1,7 @@
 package com.louisblogs.louismall.order.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.louisblogs.common.to.mq.SeckillOrderTo;
 import com.louisblogs.common.utils.PageUtils;
 import com.louisblogs.louismall.order.entity.OrderEntity;
 import com.louisblogs.louismall.order.vo.*;
@@ -41,5 +42,7 @@ public interface OrderService extends IService<OrderEntity> {
 	PageUtils queryPageWithItem(Map<String, Object> params);
 
 	String handlePayResult(PayAsyncVo payAsyncVo);
+
+	void creatSeckillOrder(SeckillOrderTo seckillOrderTo);
 }
 

@@ -3,6 +3,7 @@ package com.louisblogs.louismall.order.service.impl;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.louisblogs.common.exception.NoStockException;
+import com.louisblogs.common.to.mq.SeckillOrderTo;
 import com.louisblogs.common.utils.R;
 import com.louisblogs.common.vo.MemberRespVo;
 import com.louisblogs.louismall.order.constant.OrderConstant;
@@ -362,29 +363,29 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 		return "success";
 	}
 
-//	@Override
-//	public void creatSeckillOrder(SeckillOrderTo seckillOrderTo) {
-//
-//		//TODO 保存订单信息
-//		OrderEntity orderEntity = new OrderEntity();
-//		orderEntity.setOrderSn(seckillOrderTo.getOrderSn());
-//		orderEntity.setMemberId(seckillOrderTo.getMemberId());
-//		orderEntity.setStatus(OrderStatusEnum.CREATE_NEW.getCode());
-//		BigDecimal multiply = seckillOrderTo.getSeckillPrice().multiply(new BigDecimal("" + seckillOrderTo.getNum()));
-//		orderEntity.setPayAmount(multiply);
-//		this.save(orderEntity);
-//
-//		//TODO 保存订单项信息
-//		OrderItemEntity orderItemEntity = new OrderItemEntity();
-//		orderItemEntity.setOrderSn(seckillOrderTo.getOrderSn());
-//		orderItemEntity.setRealAmount(multiply);
-//		orderItemEntity.setSkuQuantity(seckillOrderTo.getNum());
-//
-//		//TODO 获取当前Sku相信信息
-////        productFeignService.getSpuInfoBuSkuId()
-//
-//		orderItemService.save(orderItemEntity);
-//	}
+	@Override
+	public void creatSeckillOrder(SeckillOrderTo seckillOrderTo) {
+
+		//TODO 保存订单信息
+		OrderEntity orderEntity = new OrderEntity();
+		orderEntity.setOrderSn(seckillOrderTo.getOrderSn());
+		orderEntity.setMemberId(seckillOrderTo.getMemberId());
+		orderEntity.setStatus(OrderStatusEnum.CREATE_NEW.getCode());
+		BigDecimal multiply = seckillOrderTo.getSeckillPrice().multiply(new BigDecimal("" + seckillOrderTo.getNum()));
+		orderEntity.setPayAmount(multiply);
+		this.save(orderEntity);
+
+		//TODO 保存订单项信息
+		OrderItemEntity orderItemEntity = new OrderItemEntity();
+		orderItemEntity.setOrderSn(seckillOrderTo.getOrderSn());
+		orderItemEntity.setRealAmount(multiply);
+		orderItemEntity.setSkuQuantity(seckillOrderTo.getNum());
+
+		//TODO 获取当前Sku相信信息
+//        productFeignService.getSpuInfoBuSkuId()
+
+		orderItemService.save(orderItemEntity);
+	}
 
 	/**
 	 * 保存订单数据到数据库

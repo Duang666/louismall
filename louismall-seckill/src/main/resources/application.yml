@@ -1,0 +1,53 @@
+# 服务端口
+server:
+  port: 25000
+
+spring:
+  application:
+    name: louismall-seckill
+
+  # 配置nacos注册中心
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+#  task:
+#    scheduling:
+#      pool:
+#        size: 5
+
+  #spring给我们配的线程池
+  task:
+    execution:
+      pool:
+        core-size: 5
+        max-size: 50
+
+  # redis
+  redis:
+    host: 192.168.56.10
+    port: 6379
+  session:
+    store-type: redis
+
+  # RabbitMQ配置
+  rabbitmq:
+    host: 192.168.56.10
+    port: 5672
+    virtual-host: /
+    # 开启发送端确认
+    publisher-confirms: true
+    # 开启发送端消息抵达队列的确认
+    publisher-returns: true
+    # 只要抵达队列，以异步发送优先回调我们这个returnconfirm
+    template:
+      mandatory: true
+    # 手动ack消息
+    listener:
+      simple:
+        acknowledge-mode: manual
+
+  thymeleaf:
+    cache: false
+

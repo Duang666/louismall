@@ -26,6 +26,14 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
 
+        # 配置 coupon_route 服务
+        - id: coupon_route
+          uri: lb://louismall-coupon
+          predicates:
+            - Path=/api/coupon/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
         # 配置 third_party_route 服务
         - id: third_party_route
           uri: lb://louismall-third-party
@@ -95,6 +103,12 @@ spring:
           uri: lb://louismall-member
           predicates:
             - Host=member.louismall.com
+
+        #seckill服务转发
+        - id: louismall_seckill_route
+          uri: lb://louismall-seckill
+          predicates:
+            - Host=seckill.louismall.com
 
 
 

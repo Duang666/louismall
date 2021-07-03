@@ -42,7 +42,7 @@ import java.util.Map;
 @Configuration
 public class MyRabbitMQConfig {
 
-	@Autowired
+//	@Autowired
 	RabbitTemplate rabbitTemplate;
 
 	//TODO RabbitTemplate

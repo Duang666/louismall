@@ -1,6 +1,7 @@
 package com.louisblogs.louismall.product.feign;
 
 import com.louisblogs.common.utils.R;
+import com.louisblogs.louismall.product.feign.fallback.SeckillFeignServiceFallBack;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,8 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @date ：2021/7/2 15:16
  */
 
-//@FeignClient(value = "louismall-seckill", fallback = SeckillFeignServiceFallBack.class)//这个远程服务
-@FeignClient(value = "louismall-seckill")//这个远程服务
+@FeignClient(value = "louismall-seckill", fallback = SeckillFeignServiceFallBack.class)//这个远程服务
 public interface SeckillFeignService {
 
 	/**

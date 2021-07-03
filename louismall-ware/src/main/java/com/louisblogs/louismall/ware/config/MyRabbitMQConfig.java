@@ -4,12 +4,15 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,21 +35,21 @@ import java.util.Map;
  *  2 上线专门的队列消费服务，取出来，记录到数据库，离线慢慢处理
  */
 //开启RabbitMQ消息队列
-//@EnableRabbit
+@EnableRabbit
 @Configuration
 public class MyRabbitMQConfig {
 
-//	RabbitTemplate rabbitTemplate;
+	RabbitTemplate rabbitTemplate;
 
-//	//TODO RabbitTemplate
-//	@Primary
-//	@Bean
-//	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-//		RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-//		this.rabbitTemplate = rabbitTemplate;
-//		rabbitTemplate.setMessageConverter(messageConverter());
-//		return rabbitTemplate;
-//	}
+	//TODO RabbitTemplate
+	@Primary
+	@Bean
+	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+		RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+		this.rabbitTemplate = rabbitTemplate;
+		rabbitTemplate.setMessageConverter(messageConverter());
+		return rabbitTemplate;
+	}
 
 	//没有这个方法， 不能创建RabbitMQ的东西
 //    @RabbitListener(queues = "stock.release.stock.queue")

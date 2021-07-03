@@ -15,6 +15,12 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    #配置sentinel
+    sentinel:
+      transport:
+        dashboard: localhost:8333
+        #控制台的port
+        port: 8719
 
     alicloud:
       access-key: access-key
@@ -42,3 +48,11 @@ mybatis-plus:
 logging:
   level:
     com.louisblogs.louismall: debug
+
+#management.endpoints.web.exposure.include=*
+#配置actuator统计审计信息 配合sentinel
+management:
+  endpoints:
+    web:
+      exposure:
+        include: all

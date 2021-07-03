@@ -1,5 +1,9 @@
 package com.louisblogs.louismall.seckill.service.impl;
 
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -81,11 +85,11 @@ public class SeckillServiceImpl implements SeckillService {
 
 	}
 
-//	public List<SeckillSkuRedisTo> blockHandler(BlockException e) {
-//
-//		log.info("getCurrentSeckillSkusResource资源被限流了.");
-//		return null;
-//	}
+	public List<SeckillSkuRedisTo> blockHandler(BlockException e) {
+
+		log.info("getCurrentSeckillSkusResource资源被限流了.");
+		return null;
+	}
 
 	/**
 	 * 返回当前时间可以参与的秒杀商品信息
@@ -94,7 +98,7 @@ public class SeckillServiceImpl implements SeckillService {
 	 * fallback = ""针对异常的处理
 	 */
 	//定义被保护的资源
-//	@SentinelResource(value = "getCurrentSeckillSkusResource", blockHandler = "blockHandler")
+	@SentinelResource(value = "getCurrentSeckillSkusResource", blockHandler = "blockHandler")
 	@Override
 	public List<SeckillSkuRedisTo> getCurrentSeckillSkus() {
 
@@ -102,7 +106,7 @@ public class SeckillServiceImpl implements SeckillService {
 		//当前时间
 //		long now = new Date().getTime();
 		long now = System.currentTimeMillis();
-//		try (Entry entry = SphU.entry("seckillSkus")) {
+		try (Entry entry = SphU.entry("seckillSkus")) {
 			Set<String> keys = redisTemplate.keys(SESSION_CACHE_PREFIX + "*");
 			for (String key : keys) {
 				//seckill:sessions:1613757600000_1613761200000
@@ -127,14 +131,14 @@ public class SeckillServiceImpl implements SeckillService {
 					break;
 				}
 			}
-//		} catch (BlockException e) {
-//			log.error("自定义被保护资源被限流-{}", e.getMessage());
-//		}
+		} catch (BlockException e) {
+			log.error("自定义被保护资源被限流-{}", e.getMessage());
+		}
 		return null;
 	}
 
 	/**
-	 * 给远程服务gulimall-product使用
+	 * 给远程服务louismall-product使用
 	 * 获取当前sku的秒杀预告信息
 	 */
 	@Override
@@ -173,7 +177,7 @@ public class SeckillServiceImpl implements SeckillService {
 
 	/**
 	 * 秒杀
-	 * http://seckill.gulimall.com/kill?killId=1_1&key=320c924165244276882adfaea84dac12&num=1
+	 * http://seckill.louismall.com/kill?killId=1_1&key=320c924165244276882adfaea84dac12&num=1
 	 * TODO 上架秒杀商品的时候，每一个数据都有过期时间
 	 * TODO 秒杀的后续流程，简化了收货地址等信息
 	 */

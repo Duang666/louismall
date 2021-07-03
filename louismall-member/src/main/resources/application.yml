@@ -15,6 +15,12 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    #配置sentinel
+    sentinel:
+      transport:
+        dashboard: localhost:8333
+        #控制台的port
+        port: 8719
 
   thymeleaf:
     cache: false
@@ -27,6 +33,19 @@ spring:
   session:
     store-type: redis
 
+  #配置Zipkin链路追踪可视化展示
+  zipkin:
+    base-url: http://192.168.56.10:9411/
+    #关闭自己的服务发现功能
+    discovery-client-enabled: false
+    sender:
+      #设置采用http的方式
+      type: web
+  sleuth:
+    sampler:
+      #配置sleuth采样器 100%
+      probability: 1
+
 # 配置mapper xml文件的路径
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
@@ -34,3 +53,11 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+
+#management.endpoints.web.exposure.include=*
+#配置actuator统计审计信息 配合sentinel
+management:
+  endpoints:
+    web:
+      exposure:
+        include: all
